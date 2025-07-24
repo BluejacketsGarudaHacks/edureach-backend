@@ -77,7 +77,7 @@ namespace Backend.Controllers
         }
         
         
-        [HttpPut("")]
+        [HttpPut]
         public async Task<ActionResult<User>> 
             UpdateUser(Guid id, [FromBody] RegisterRequest register)
         {
@@ -110,6 +110,29 @@ namespace Backend.Controllers
 
             return result;
         }
+
+        [HttpGet]
+        public async Task<ActionResult<User>> Get()
+        {
+            var userId = Guid.Parse(HttpContext.Items["UserId"]!.ToString()!);
+            var user = await _userRepository.GetUserById(userId);
+
+            if(user == null) {
+                return NotFound("User not found");
+            }
+
+            var userResponse = new UserResponseDto
+            {
+                Fullname = user.Fullname,
+                Email = user.Email,
+                IsVolunteer = user.IsVolunteer,
+                Dob = user.Dob,
+                ImagePath = user.ImagePath
+            };
+
+            return Ok(userResponse);
+        }
+
 
         [HttpPost("add-notification")]
         public async Task<ActionResult<Notification>> AddNotification([FromBody] NotificationRequest notificationRequest)

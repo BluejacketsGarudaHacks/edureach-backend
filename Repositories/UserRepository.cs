@@ -26,6 +26,12 @@ namespace Backend.Repositories
             return user;
         }
 
+        public async Task<User?> GetUserById(Guid userId)
+        {
+            var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            return user;
+        }
+
         public async Task<User> UpdateUser(Guid id, User user)
         {
             var existing = await _db.Users.FindAsync(id);
