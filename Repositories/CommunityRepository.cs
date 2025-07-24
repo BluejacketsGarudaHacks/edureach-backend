@@ -28,6 +28,7 @@ public class CommunityRepository
     {
         return await _db.Communities
             .Include(c => c.Members) // optional, include related entities
+            .ThenInclude(m => m.User)
             .Include(c => c.Schedules)
             .Include(c => c.Location)
             .FirstOrDefaultAsync(c => c.Id == id);
