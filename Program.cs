@@ -104,15 +104,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-if (!app.Environment.IsDevelopment())
-{
-    app.UseAuthentication();
-    app.UseAuthorization();
-    app.UseAuthenticationMiddleware();
-}
-
-// app.UseAuthentication();
-// app.UseAuthorization();
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseStaticFiles();
 app.UseHttpsRedirection();
 app.UseCorsMiddleware();
