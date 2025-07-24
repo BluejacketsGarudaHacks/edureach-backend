@@ -5,7 +5,7 @@ namespace Backend.Models;
 public class UserSummary
 {
     [Key]
-    public Guid Id { get; set; }
+    public Guid Id { get; set; } = Guid.NewGuid();
 
     [Required]
     public Guid UserId { get; set; }
@@ -15,9 +15,8 @@ public class UserSummary
     
     [Required]
     public string SummaryResult { get; set; }
-    
-    [Required]
-    public DateTime CreatedAt { get; set; }
+
+    [Required] public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     public User User;
 }
