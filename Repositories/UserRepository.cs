@@ -26,6 +26,24 @@ namespace Backend.Repositories
             return user;
         }
 
+        public async Task<User> UpdateUser(Guid id, User user)
+        {
+            var existing = await _db.Users.FindAsync(id);
+            if(existing == null)
+                throw new DataException("Akun tidak ditemukan");
+
+            existing.Email = user.Email;
+            existing.Fullname = user.Fullname;
+            existing.Dob = user.Dob;
+            existing.Password = user.Password;
+            existing.IsVolunteer = user.IsVolunteer;
+
+            _db.Users.Update(existing);
+            await _db.SaveChangesAsync();
+            
+            return existing;
+        }
+
         public async Task InsertNewUserAsync(User user)
         {
             _db.Users.Add(user);
