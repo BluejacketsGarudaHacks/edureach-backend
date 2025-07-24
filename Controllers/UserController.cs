@@ -114,7 +114,7 @@ namespace Backend.Controllers
             return result;
         }
 
-        [HttpPut("/password")]
+        [HttpPut("password")]
         public async Task<ActionResult<User>> UpdatePassword([FromBody] UpdatePasswordDto dto)
         {
             var userId = Guid.Parse(HttpContext.Items["UserId"]!.ToString()!);

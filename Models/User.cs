@@ -30,5 +30,6 @@ namespace Backend.Models
         public ICollection<Notification> Notifications{ get; set; }
         public ICollection<Feedback> GivenFeedbacks{ get; set; }
         public ICollection<Feedback> ReceivedFeedbacks{ get; set; }
+        public ICollection<UserSummary> UserSummaries{ get; set; }
     }
 }   

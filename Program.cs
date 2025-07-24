@@ -113,7 +113,7 @@ if (!app.Environment.IsDevelopment())
 
 // app.UseAuthentication();
 // app.UseAuthorization();
-
+app.UseStaticFiles();
 app.UseHttpsRedirection();
 app.UseCorsMiddleware();
 app.UseAuthenticationMiddleware();

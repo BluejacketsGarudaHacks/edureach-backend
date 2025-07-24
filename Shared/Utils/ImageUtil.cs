@@ -17,7 +17,8 @@ namespace Backend.Shared.Utils
         public string SaveImage(byte[] imageBytes, string originalFileName)
         {
             var fileName = GenerateImageFileName(originalFileName);
-            var imagesFolder = Path.Combine(Directory.GetCurrentDirectory(), "Images");
+            var wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+            var imagesFolder = Path.Combine(wwwrootPath, "Images");
             if (!Directory.Exists(imagesFolder))
             {
                 Directory.CreateDirectory(imagesFolder);
@@ -25,8 +26,8 @@ namespace Backend.Shared.Utils
             var filePath = Path.Combine(imagesFolder, fileName);
             File.WriteAllBytes(filePath, imageBytes);
 
-            filePath = "/" + Path.Combine("Images", fileName).Replace("\\", "/");
-            return filePath;
+            var publicPath = $"/Images/{fileName}";
+            return publicPath;
         }
 
         public string GetImagePath(string imageFileName)
