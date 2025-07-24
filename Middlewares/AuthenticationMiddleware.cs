@@ -28,7 +28,8 @@ namespace Backend.Middlewares
         {
             var path = context.Request.Path.Value?.ToLower();
 
-            if (path == "/api/user/login" || path == "/api/user/register" || path.StartsWith("/Images/")) {
+            if (path == "/api/user/login" || path == "/api/user/register" 
+                || path.StartsWith("/Images/") || path.StartsWith("/api/feedback/volunteer") ) {
                 await _next(context);
                 return;
             }
