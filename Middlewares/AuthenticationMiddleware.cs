@@ -27,7 +27,6 @@ namespace Backend.Middlewares
         public async Task InvokeAsync(HttpContext context)
         {
             var path = context.Request.Path.Value?.ToLower();
-            _logger.LogInformation($"path: {path}");
 
             if (path == "/api/user/login" || path == "/api/user/register") {
                 await _next(context);
@@ -35,6 +34,11 @@ namespace Backend.Middlewares
             }
             
             var authHeader = context.Request.Headers["Authorization"].ToString();
+            foreach (var header in context.Request.Headers)
+            {
+                _logger.LogInformation($"Header: {header.Key} = {header.Value}");
+            }
+
             if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
             {
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
@@ -43,6 +47,7 @@ namespace Backend.Middlewares
             }
 
             var token = authHeader.Substring("Bearer ".Length).Trim();
+            
             try
             {
                 var userId = _jwtUtil.ValidateToken(token);

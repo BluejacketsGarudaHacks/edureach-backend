@@ -16,11 +16,13 @@ namespace Backend.Controllers
     {
         private readonly UserRepository _userRepository;
         private readonly JwtUtil _jwtUtil;
+        private readonly ImageUtil _imageUtil;
         
-        public UserController(UserRepository UserRepository, JwtUtil jwtUtil)
+        public UserController(UserRepository UserRepository, JwtUtil jwtUtil, ImageUtil imageUtil)
         {
             _userRepository = UserRepository;
             _jwtUtil = jwtUtil;
+            _imageUtil = imageUtil;
         }
 
         [HttpPost("login")]

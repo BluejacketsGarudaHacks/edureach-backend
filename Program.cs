@@ -37,6 +37,10 @@ builder.Services.AddSingleton<JwtUtil>(provider =>
     return new JwtUtil(secret!, issuer!, audience!);
 });
 
+builder.Services.AddSingleton<ImageUtil>(
+    provider => new ImageUtil()
+);
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

@@ -2,6 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Extensions.Logging;
 
 namespace Backend.Shared.Utils;
 
@@ -54,8 +55,7 @@ public class JwtUtil
         }, out var validatedToken);
 
         var jwtToken = (JwtSecurityToken) validatedToken;
-        
-        var initialClaim = jwtToken.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
+        var initialClaim = jwtToken.Claims.FirstOrDefault(x => x.Type == "nameid");
         if (initialClaim == null)
         {
             throw new SecurityTokenException("Token does not contain a valid user identifier.");
