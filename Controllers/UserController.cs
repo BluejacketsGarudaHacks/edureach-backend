@@ -31,12 +31,12 @@ namespace Backend.Controllers
             var userId = await _userRepository.GetUserIdByEmailAndPasswordAsync(login.Email, login.Password);
             if (userId == null)
             {
-                return NotFound(new FailResponse<string>(null, "User not found"));
+                return NotFound(new FailResponse<string>(null, "Invalid credentials"));
             }
 
             var expires = DateTime.UtcNow.AddDays(7);
             var jwtToken = _jwtUtil.GenerateToken(userId.ToString(), expires);
-            return Ok(new SuccessResponse<string>(jwtToken, "Login successful"));
+            return Ok(new SuccessResponse<string>(jwtToken, "Berhasil login"));
         }
 
         [HttpPost("register")]
@@ -45,12 +45,12 @@ namespace Backend.Controllers
             var errors = RegisterValidator.Validate(register);
             if (errors.Any())
             {
-                return BadRequest(new FailResponse<List<string>>(errors, "Validation failed"));
+                return BadRequest(new FailResponse<List<string>>(errors, "Validasi gagal"));
             }
             
             var user = await _userRepository.GetUserByEmail(register.Email);
             if(user != null) {
-                return BadRequest(new FailResponse<string>(null, "Email already registered"));
+                return BadRequest(new FailResponse<string>(null, "Email sudah terdaftar"));
             }
 
             var fullName = string.Concat(register.FirstName, " ", register.LastName);
@@ -70,10 +70,10 @@ namespace Backend.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new FailResponse<string>(null, $"Failed to register user: {ex.Message}"));
+                return StatusCode(500, new FailResponse<string>(null, $"Gagal mendaftarkan user: {ex.Message}"));
             }
 
-            return Ok(new SuccessResponse<string>(null, "Registration successful"));
+            return Ok(new SuccessResponse<string>(null, "Pendaftaran berhasil"));
         }
     }
 } 
