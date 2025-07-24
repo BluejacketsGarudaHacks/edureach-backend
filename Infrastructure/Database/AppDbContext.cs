@@ -32,6 +32,10 @@ namespace Backend.Infrastructure.Database
 
             modelBuilder.Entity<Community>()
                 .HasKey(c => c.Id);
+
+            modelBuilder.Entity<Location>().HasData(
+                
+            )
         }
     }
 } 

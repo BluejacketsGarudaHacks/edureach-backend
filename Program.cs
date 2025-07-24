@@ -43,6 +43,12 @@ builder.Services.AddSingleton<ImageUtil>(
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    Backend.Seeders.LocationSeeding.Seed(dbContext);
+}
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
