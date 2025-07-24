@@ -10,6 +10,7 @@ namespace Backend.Infrastructure.Database
         public DbSet<CommunityMember> CommunityMembers { get; set; }
         public DbSet<Location> Locations { get; set; }
         public DbSet<Schedule> Schedules { get; set; }
+        public DbSet<Notification> Notifications{ get; set; }
  
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
@@ -23,6 +24,12 @@ namespace Backend.Infrastructure.Database
                 .WithOne(s => s.Volunteer)
                 .HasForeignKey(s => s.VolunteerId)
                 .IsRequired();
+            
+            modelBuilder.Entity<User>()
+                            .HasMany<Notification>(u => u.Notifications)
+                            .WithOne(s => s.User)
+                            .HasForeignKey(s => s.UserId)
+                            .IsRequired();
             
             modelBuilder.Entity<User>()
                 .HasMany<CommunityMember>(u => u.Members)
