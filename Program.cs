@@ -28,7 +28,7 @@ builder.Services.AddSwaggerGen(options =>
         In = Microsoft.OpenApi.Models.ParameterLocation.Header,
         Description = "Enter your JWT token"
     });
-    
+
     options.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
     {
         {
@@ -72,6 +72,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<CommunityRepository>();
 
+builder.Services.AddHttpClient();
+
 builder.Services.AddSingleton<JwtUtil>(provider =>
 {
     var configuration = provider.GetRequiredService<IConfiguration>();
@@ -99,12 +101,19 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+if (!app.Environment.IsDevelopment())
+{
+    app.UseAuthentication();
+    app.UseAuthorization();
+    app.UseAuthenticationMiddleware(); // your custom auth middleware
+}
+
 // app.UseAuthentication();
 // app.UseAuthorization();
+
 app.UseHttpsRedirection();
 app.UseCorsMiddleware();
-app.UseErrorMiddleware();
-app.UseAuthenticationMiddleware();
+// app.UseAuthenticationMiddleware();
 app.MapControllers();
 
 app.Run();
