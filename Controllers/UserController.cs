@@ -61,7 +61,8 @@ namespace Backend.Controllers
                 Email = register.Email,
                 Password = register.Password,
                 IsVolunteer = register.IsVolunteer,
-                Dob = register.Dob
+                Dob = register.Dob,
+                ImagePath = "/Images/basic_profile.png"
             };
 
             try
@@ -79,32 +80,38 @@ namespace Backend.Controllers
         
         [HttpPut]
         public async Task<ActionResult<User>> 
-            UpdateUser(Guid id, [FromBody] RegisterRequest register)
+            UpdateUser([FromForm] UpdateUserRequest update)
         {
             var userId = Guid.Parse(HttpContext.Items["UserId"]!.ToString()!);
-            var errors = RegisterValidator.Validate(register);
-            
-            if (errors.Any())
+            var errors = UpdateUserValidator.Validate(update);
+
+            var user = await _userRepository.GetUserById(userId);
+            if (user == null)
             {
-                return BadRequest(new FailResponse<List<string>>(errors, "Data yang dikirim masih salah"));
+                return NotFound(new FailResponse<string>(null, "User not found"));
             }
-            
-            var checkUser = await _userRepository.GetUserByEmail(register.Email);
-            if(checkUser != null) {
-                return BadRequest(new FailResponse<string>(null, "Email sudah terdaftar"));
-            }
-            
-            var fullName = string.Concat(register.FirstName, " ", register.LastName);
-            
-            var user = new User 
+
+            var fullName = string.Concat(update.FirstName, " ", update.LastName);
+
+            user.Fullname = fullName;
+            user.Email = update.Email;
+            user.IsVolunteer = update.IsVolunteer;
+            user.Dob = update.Dob;
+            if (!string.IsNullOrEmpty(update.Password))
             {
-                Id = Guid.NewGuid(),
-                Fullname = fullName,
-                Email = register.Email,
-                Password = register.Password,
-                IsVolunteer = register.IsVolunteer,
-                Dob = register.Dob
-            };
+                user.Password = update.Password;
+            }
+
+            if (update.Image != null)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    await update.Image.CopyToAsync(memoryStream);
+                    var imageBytes = memoryStream.ToArray();
+                    var imageName = _imageUtil.SaveImage(imageBytes, update.Image.FileName);
+                    user.ImagePath = imageName;
+                }
+            }
             
             var result = await _userRepository.UpdateUser(userId, user);
 
@@ -123,7 +130,7 @@ namespace Backend.Controllers
 
             var userResponse = new UserResponseDto
             {
-                Fullname = user.Fullname,
+                FullName = user.Fullname,
                 Email = user.Email,
                 IsVolunteer = user.IsVolunteer,
                 Dob = user.Dob,
