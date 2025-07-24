@@ -55,5 +55,15 @@ namespace Backend.Repositories
             
             return notification;
         }
+
+        public async Task<ICollection<Notification>> GetUserNotificationsAsync(Guid userId)
+        {
+            var notifications = _db.Notifications
+                .Where(u => u.UserId.Equals(userId))
+                .OrderByDescending(u => u.CreatedAt)
+                .ToList();
+            
+            return notifications;
+        }
     }
 }

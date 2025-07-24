@@ -105,5 +105,14 @@ namespace Backend.Controllers
             _userRepository.UpdateNotificationAsync(id, notification);
             return Ok(notification);
         }
+
+        [HttpGet("notification/user/{userId}")]
+        public async Task<ActionResult<ICollection<Notification>>> 
+            GetUserNotification(Guid userId)
+        {
+            var notifications = await _userRepository.GetUserNotificationsAsync(userId);
+            
+            return Ok(notifications);
+        }
     }
 } 
