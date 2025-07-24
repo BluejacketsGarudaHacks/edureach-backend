@@ -7,8 +7,8 @@ namespace Backend.Dtos
         string LastName,
         string Email,
         DateOnly Dob, 
-        string Password,
-        string ConfirmPassword,
+        string? Password,
+        string? ConfirmPassword,
         bool IsVolunteer,
         IFormFile Image
     );
