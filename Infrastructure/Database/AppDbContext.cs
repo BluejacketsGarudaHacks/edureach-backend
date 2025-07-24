@@ -11,6 +11,7 @@ namespace Backend.Infrastructure.Database
         public DbSet<Location> Locations { get; set; }
         public DbSet<Schedule> Schedules { get; set; }
         public DbSet<Notification> Notifications{ get; set; }
+        public DbSet<Feedback> Feedbacks{ get; set; }
  
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
@@ -23,6 +24,18 @@ namespace Backend.Infrastructure.Database
                 .HasMany<Schedule>(u => u.Schedules)
                 .WithOne(s => s.Volunteer)
                 .HasForeignKey(s => s.VolunteerId)
+                .IsRequired();
+            
+            modelBuilder.Entity<User>()
+                .HasMany<Feedback>(u => u.ReceivedFeedbacks)
+                .WithOne(s => s.Volunteer)
+                .HasForeignKey(s => s.VolunteerId)
+                .IsRequired();
+            
+            modelBuilder.Entity<User>()
+                .HasMany<Feedback>(u => u.GivenFeedbacks)
+                .WithOne(s => s.User)
+                .HasForeignKey(s => s.UserId)
                 .IsRequired();
             
             modelBuilder.Entity<User>()
