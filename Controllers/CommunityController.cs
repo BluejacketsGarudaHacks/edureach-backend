@@ -44,11 +44,10 @@ public class CommunityController : ControllerBase
     public async Task<ActionResult<Community>> Create([FromForm] CommunityRequest communityRequest)
     {
         var userId = Guid.Parse(HttpContext.Items["UserId"]!.ToString()!);
-        Console.WriteLine("kontol");    
         var community = await this.CreateCommunityObject(communityRequest);
         var created = await _repository.AddCommunityAsync(community);
         var communityMember = await _repository.AddCommunityMemberAsync(
-            community.Id, userId
+            community.Id, userId, true
         );
         return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
     }
@@ -80,8 +79,26 @@ public class CommunityController : ControllerBase
     public async Task<ActionResult<CommunityMember>> AddMember([FromBody] CommunityMemberRequest memberRequest)
     {
         var communityMember = await _repository.AddCommunityMemberAsync(
-            memberRequest.CommunityId, memberRequest.MemberId);
+            memberRequest.CommunityId, memberRequest.MemberId, false);
         
+        return Ok(communityMember);
+    }
+
+    // PUT: api/community/accept-member
+    [HttpPut("accept-member")]
+    public async Task<ActionResult<CommunityMember>> UpdateMember([FromBody] CommunityMemberRequest memberRequest)
+    {
+        var userId = Guid.Parse(HttpContext.Items["UserId"]!.ToString()!);
+
+        var joinedUser = await _repository.GetCommunityMemberByMemberIdAndCommunityId(memberRequest.CommunityId, userId);
+        if(joinedUser == null) {
+            return BadRequest("User is not a member of this community");
+        }
+
+        var communityMember = await _repository.GetCommunityMemberByMemberIdAndCommunityId(memberRequest.CommunityId, memberRequest.MemberId);
+        communityMember.IsJoined = true;
+        
+        communityMember = await _repository.UpdateCommunityMemberAsync(communityMember);
         return Ok(communityMember);
     }
 

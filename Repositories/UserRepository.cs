@@ -71,8 +71,6 @@ namespace Backend.Repositories
             if (findNotification == null)
                 throw new DataException("Notification not found");
             
-            Console.WriteLine(findNotification.Id);
-
             findNotification.IsShown = notification.IsShown;
             findNotification.Message = notification.Message;
             

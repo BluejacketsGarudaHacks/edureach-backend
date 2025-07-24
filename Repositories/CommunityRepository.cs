@@ -70,7 +70,7 @@ public class CommunityRepository
         return true;
     }
 
-    public async Task<CommunityMember> AddCommunityMemberAsync(Guid communityId, Guid memberId)
+    public async Task<CommunityMember> AddCommunityMemberAsync(Guid communityId, Guid memberId, bool IsJoined)
     {
         var community = await _db.Communities.
             Where(c => c.Id.Equals(communityId))
@@ -93,9 +93,22 @@ public class CommunityRepository
         {
             UserId = memberId,
             CommunityId = communityId,
+            IsJoined = IsJoined
         };
 
         _db.CommunityMembers.Add(communityMember);
+        await _db.SaveChangesAsync();
+        return communityMember;
+    }
+
+    public async Task<CommunityMember> GetCommunityMemberByMemberIdAndCommunityId(Guid communityId, Guid memberId)
+    {
+        return await _db.CommunityMembers.FirstOrDefaultAsync(cm => cm.UserId == memberId && cm.CommunityId == communityId);
+    }
+
+    public async Task<CommunityMember> UpdateCommunityMemberAsync(CommunityMember communityMember)
+    {
+        _db.CommunityMembers.Update(communityMember);
         await _db.SaveChangesAsync();
         return communityMember;
     }
