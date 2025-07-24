@@ -40,8 +40,12 @@ public class CommunityController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Community>> Create([FromBody] CommunityRequest communityRequest)
     {
+        var userId = Guid.Parse(HttpContext.Items["UserId"]!.ToString()!);
         var community = this.CreateCommunityObject(communityRequest);
         var created = await _repository.AddCommunityAsync(community);
+        var communityMember = await _repository.AddCommunityMemberAsync(
+            community.Id, userId
+        );
         return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
     }
 
@@ -69,12 +73,11 @@ public class CommunityController : ControllerBase
     }
 
     [HttpPost("add-member")]
-    public async Task<ActionResult<CommunityMember>> AddMember
-        ([FromBody] CommunityMemberRequest memberRequest)
+    public async Task<ActionResult<CommunityMember>> AddMember([FromBody] CommunityMemberRequest memberRequest)
     {
         var communityMember = await _repository.AddCommunityMemberAsync(
             memberRequest.CommunityId, memberRequest.MemberId);
-
+        
         return Ok(communityMember);
     }
 

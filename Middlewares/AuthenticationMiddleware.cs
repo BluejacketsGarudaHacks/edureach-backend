@@ -34,11 +34,6 @@ namespace Backend.Middlewares
             }
             
             var authHeader = context.Request.Headers["Authorization"].ToString();
-            foreach (var header in context.Request.Headers)
-            {
-                _logger.LogInformation($"Header: {header.Key} = {header.Value}");
-            }
-
             if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
             {
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
@@ -52,13 +47,14 @@ namespace Backend.Middlewares
             {
                 var userId = _jwtUtil.ValidateToken(token);
                 context.Items["UserId"] = userId;
-                await _next(context);
             }
             catch (Exception ex)
             {
-                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                await context.Response.WriteAsync($"Invalid or expired token: {ex.Message}");
+                throw new SecurityTokenException("Invalid or expired token", ex);
+                return;
             }
+
+            await _next(context);
         }
     }
 

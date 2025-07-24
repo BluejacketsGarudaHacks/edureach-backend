@@ -11,6 +11,7 @@ public class CommunityMember: ModelWithDate
     [Required]
     public Guid CommunityId { get; set; }
 
+    
     public User User { get; set; }
     public Community Commuity { get; set; }
 }

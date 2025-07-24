@@ -84,7 +84,12 @@ public class CommunityRepository
         if(user == null)
             throw new DataException("User not found");
 
-        var communityMember = new CommunityMember()
+        var communityMember = await _db.CommunityMembers.FirstOrDefaultAsync(cm => cm.UserId == memberId && cm.CommunityId == communityId);
+        if(communityMember != null)
+            throw new DataException("User already joined this community");
+        
+
+        communityMember = new CommunityMember()
         {
             UserId = memberId,
             CommunityId = communityId,
