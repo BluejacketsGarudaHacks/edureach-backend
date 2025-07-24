@@ -25,11 +25,10 @@ namespace Backend.Controllers
         }
 
         // GET: api/Feedback/volunteer
-        [HttpGet("volunteer")]
-        public async Task<ActionResult<ICollection<Feedback>>> GetVolunteerFeedbacks()
+        [HttpGet("volunteer/{volunteerId}")]
+        public async Task<ActionResult<ICollection<Feedback>>> GetVolunteerFeedbacks(Guid volunteerId)
         {
-            var userId = Guid.Parse(HttpContext.Items["UserId"]!.ToString()!);
-            var feedbacks = await _feedbackRepository.GetAllVolunteerFeedbackAsync(userId);
+            var feedbacks = await _feedbackRepository.GetAllVolunteerFeedbackAsync(volunteerId);
             return feedbacks;
         }
 
