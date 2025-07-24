@@ -18,7 +18,7 @@ namespace Backend.Middlewares
         {
             context.Response.Headers.Add("Access-Control-Allow-Origin", "*");
             context.Response.Headers.Add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-            context.Response.Headers.Add("Access-Control-Allow-Headers", "Content-Type, Accept");
+            context.Response.Headers.Add("Access-Control-Allow-Headers", "Content-Type, Accept, Authorization");
 
             if (context.Request.Method == "OPTIONS")
             {

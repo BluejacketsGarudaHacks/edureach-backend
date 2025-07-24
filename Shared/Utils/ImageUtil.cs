@@ -24,7 +24,9 @@ namespace Backend.Shared.Utils
             }
             var filePath = Path.Combine(imagesFolder, fileName);
             File.WriteAllBytes(filePath, imageBytes);
-            return fileName;
+
+            filePath = "/" + Path.Combine("Images", fileName).Replace("\\", "/");
+            return filePath;
         }
 
         public string GetImagePath(string imageFileName)

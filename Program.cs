@@ -71,6 +71,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<CommunityRepository>();
+builder.Services.AddScoped<LocationRepository>();
 
 builder.Services.AddHttpClient();
 
@@ -105,7 +106,7 @@ if (!app.Environment.IsDevelopment())
 {
     app.UseAuthentication();
     app.UseAuthorization();
-    app.UseAuthenticationMiddleware(); // your custom auth middleware
+    app.UseAuthenticationMiddleware();
 }
 
 // app.UseAuthentication();
@@ -113,7 +114,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseCorsMiddleware();
-// app.UseAuthenticationMiddleware();
+app.UseAuthenticationMiddleware();
 app.MapControllers();
 
 app.Run();

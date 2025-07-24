@@ -2,6 +2,7 @@ using Backend.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using Backend.Models;
 using Backend.Repositories;
+using Backend.Shared.Utils;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Backend.Controllers;
@@ -10,11 +11,13 @@ namespace Backend.Controllers;
 [Route("api/[controller]")]
 public class CommunityController : ControllerBase
 {
+    private readonly ImageUtil _imageUtil;
     private readonly CommunityRepository _repository;
 
-    public CommunityController(CommunityRepository repository)
+    public CommunityController(CommunityRepository repository, ImageUtil imageUtil)
     {
         _repository = repository;
+        _imageUtil = imageUtil;
     }
 
     // GET: api/community
@@ -38,10 +41,11 @@ public class CommunityController : ControllerBase
 
     // POST: api/community
     [HttpPost]
-    public async Task<ActionResult<Community>> Create([FromBody] CommunityRequest communityRequest)
+    public async Task<ActionResult<Community>> Create([FromForm] CommunityRequest communityRequest)
     {
         var userId = Guid.Parse(HttpContext.Items["UserId"]!.ToString()!);
-        var community = this.CreateCommunityObject(communityRequest);
+        Console.WriteLine("kontol");    
+        var community = await this.CreateCommunityObject(communityRequest);
         var created = await _repository.AddCommunityAsync(community);
         var communityMember = await _repository.AddCommunityMemberAsync(
             community.Id, userId
@@ -51,9 +55,9 @@ public class CommunityController : ControllerBase
 
     // PUT: api/community/{id}
     [HttpPut("{id}")]
-    public async Task<ActionResult<Community>> Update(Guid id, [FromBody] CommunityRequest communityRequest)
+    public async Task<ActionResult<Community>> Update(Guid id, [FromForm] CommunityRequest communityRequest)
     {
-        var updatedCommunity = this.CreateCommunityObject(communityRequest);
+        var updatedCommunity = await this.CreateCommunityObject(communityRequest);
         var result = await _repository.UpdateCommunityAsync(id, updatedCommunity);
         if (result == null)
             return NotFound();
@@ -81,16 +85,40 @@ public class CommunityController : ControllerBase
         return Ok(communityMember);
     }
 
-    private Community CreateCommunityObject(CommunityRequest communityRequest)
+    // private Community CreateCommunityObject(CommunityRequest communityRequest)
+    // {
+    //     var community = new Community()
+    //      {
+    //          LocationId = communityRequest.LocationId,
+    //          Description = communityRequest.Description,
+    //          Name = communityRequest.Name,
+    //          ImagePath = communityRequest.ImagePath,
+    //      };
+
+    //      return community;
+    // }
+
+    private async Task<Community> CreateCommunityObject(CommunityRequest communityRequest)
     {
         var community = new Community()
-         {
-             LocationId = communityRequest.LocationId,
-             Description = communityRequest.Description,
-             Name = communityRequest.Name,
-             ImagePath = communityRequest.ImagePath,
-         };
+        {
+            LocationId = communityRequest.LocationId,
+            Description = communityRequest.Description,
+            Name = communityRequest.Name,
+            ImagePath = "/Images/basic_group.png"
+        };
 
-         return community;
+         if (communityRequest.Image != null)
+            {
+                 using (var memoryStream = new MemoryStream())
+                {
+                    await communityRequest.Image.CopyToAsync(memoryStream);
+                    var imageBytes = memoryStream.ToArray();
+                    var imageName = _imageUtil.SaveImage(imageBytes, communityRequest.Image.FileName);
+                   community.ImagePath = imageName;
+                }
+            }
+
+        return community;
     }
 }

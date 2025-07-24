@@ -4,7 +4,7 @@ namespace Backend.Dtos
 {
     public class UserResponseDto
     {
-        public string Fullname { get; set; }
+        public string FullName { get; set; }
         public string Email { get; set; }
         public bool IsVolunteer { get; set; }
         public DateOnly Dob { get; set; }
