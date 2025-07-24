@@ -118,7 +118,7 @@ namespace Backend.Controllers
         public async Task<ActionResult<User>> UpdatePassword([FromBody] UpdatePasswordDto dto)
         {
             var userId = Guid.Parse(HttpContext.Items["UserId"]!.ToString()!);
-            var errors = PasswordValidator.Validate(dto.NewPassword, dto.ConfirmPassword);
+            var errors = PasswordValidator.Validate(dto.Password, dto.ConfirmPassword);
             if (errors.Any())
             {
                 return BadRequest(new FailResponse<List<string>>(errors, "Validasi gagal"));
