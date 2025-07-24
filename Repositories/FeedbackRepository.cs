@@ -42,10 +42,12 @@ public class FeedbackRepository
     // Update
     public async Task<bool> UpdateFeedbackAsync(Guid id, Feedback feedback)
     {
-        var existing = await _db.Feedbacks.FindAsync(feedback.Id);
+        var existing = await _db.Feedbacks.FindAsync(id);
         if (existing == null) return false;
 
-        _db.Entry(existing).CurrentValues.SetValues(feedback);
+        existing.Message = feedback.Message;
+
+        _db.Feedbacks.Update(existing);
         await _db.SaveChangesAsync();
         return true;
     }
