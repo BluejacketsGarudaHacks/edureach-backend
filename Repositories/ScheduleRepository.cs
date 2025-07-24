@@ -40,7 +40,10 @@ public class ScheduleRepository
         var existing = await _db.Schedules.FindAsync(id);
         if (existing == null) throw new DataException("Schedule tidak ditemukan");
 
-        _db.Entry(existing).CurrentValues.SetValues(schedule);
+        existing.CommunityId = schedule.CommunityId;
+        existing.ScheduleTime = schedule.ScheduleTime;
+
+        _db.Schedules.Update(existing);
         await _db.SaveChangesAsync();
         return true;
     }
