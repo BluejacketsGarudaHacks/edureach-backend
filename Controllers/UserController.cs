@@ -97,11 +97,7 @@ namespace Backend.Controllers
             user.Email = update.Email;
             user.IsVolunteer = update.IsVolunteer;
             user.Dob = update.Dob;
-            if (!string.IsNullOrEmpty(update.Password))
-            {
-                user.Password = update.Password;
-            }
-
+           
             if (update.Image != null)
             {
                 using (var memoryStream = new MemoryStream())
@@ -113,6 +109,28 @@ namespace Backend.Controllers
                 }
             }
             
+            var result = await _userRepository.UpdateUser(userId, user);
+
+            return result;
+        }
+
+        [HttpPut("/password")]
+        public async Task<ActionResult<User>> UpdatePassword([FromBody] UpdatePasswordDto dto)
+        {
+            var userId = Guid.Parse(HttpContext.Items["UserId"]!.ToString()!);
+            var errors = PasswordValidator.Validate(dto.NewPassword, dto.ConfirmPassword);
+            if (errors.Any())
+            {
+                return BadRequest(new FailResponse<List<string>>(errors, "Validasi gagal"));
+            }
+
+            var user = await _userRepository.GetUserById(userId);
+            if (user == null)
+            {
+                return NotFound(new FailResponse<string>(null, "User not found"));
+            }
+
+            user.Password = dto.Password;
             var result = await _userRepository.UpdateUser(userId, user);
 
             return result;
