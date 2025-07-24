@@ -25,22 +25,6 @@ namespace Backend.Controllers
             _imageUtil = imageUtil;
         }
 
-        [HttpPost("test")]
-        public async Task<IActionResult> Test(IFormFile image)
-        {
-            if (image == null || image.Length == 0)
-            {
-                return BadRequest(new FailResponse<string>(null, "No image file uploaded."));
-            }
-
-            using var ms = new MemoryStream();
-            await image.CopyToAsync(ms);
-            var imageBytes = ms.ToArray();
-            var fileName = _imageUtil.SaveImage(imageBytes, image.FileName);
-
-            return Ok(new SuccessResponse<string>(fileName, "Image uploaded successfully."));
-        }
-
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest login)
         {
