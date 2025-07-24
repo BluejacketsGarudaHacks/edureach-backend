@@ -31,7 +31,7 @@ namespace Backend.Controllers
             var userId = await _userRepository.GetUserIdByEmailAndPasswordAsync(login.Email, login.Password);
             if (userId == null)
             {
-                return NotFound(new FailResponse<string>(null, "Invalid credentials"));
+                return NotFound(new FailResponse<string>(null, "Kredensial salah."));
             }
 
             var expires = DateTime.UtcNow.AddDays(7);
