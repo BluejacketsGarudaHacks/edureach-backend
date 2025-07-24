@@ -40,7 +40,7 @@ public class FeedbackRepository
     }
 
     // Update
-    public async Task<bool> UpdateFeedbackAsync(Feedback feedback)
+    public async Task<bool> UpdateFeedbackAsync(Guid id, Feedback feedback)
     {
         var existing = await _db.Feedbacks.FindAsync(feedback.Id);
         if (existing == null) return false;

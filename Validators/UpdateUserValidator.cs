@@ -8,23 +8,6 @@ namespace Backend.Validators {
                 errors.Add("Nama depan harus diisi.");
             if (string.IsNullOrWhiteSpace(request.Email))
                 errors.Add("Email harus diisi.");
-            if (!string.IsNullOrWhiteSpace(request.Password))
-            {
-                if (request.Password.Length < 8)
-                    errors.Add("Password harus terdiri dari minimal 8 karakter.");
-                if (!request.Password.Any(char.IsDigit))
-                    errors.Add("Password harus memiliki angka.");
-                if (!request.Password.Any(ch => !char.IsLetterOrDigit(ch)))
-                    errors.Add("Password harus memiliki symbol.");
-
-                if (string.IsNullOrWhiteSpace(request.ConfirmPassword))
-                    errors.Add("Konfirmasi password harus diisi.");
-                    
-                if (!string.IsNullOrWhiteSpace(request.Password) &&
-                    !string.IsNullOrWhiteSpace(request.ConfirmPassword) &&
-                    request.Password != request.ConfirmPassword)
-                    errors.Add("Konfirmasi password tidak sama.");
-            }
             if (request.IsVolunteer)
             {
                 var today = DateOnly.FromDateTime(DateTime.UtcNow);
