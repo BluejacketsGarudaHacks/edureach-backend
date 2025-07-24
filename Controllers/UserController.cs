@@ -16,11 +16,29 @@ namespace Backend.Controllers
     {
         private readonly UserRepository _userRepository;
         private readonly JwtUtil _jwtUtil;
+        private readonly ImageUtil _imageUtil;
         
-        public UserController(UserRepository UserRepository, JwtUtil jwtUtil)
+        public UserController(UserRepository UserRepository, JwtUtil jwtUtil, ImageUtil imageUtil)
         {
             _userRepository = UserRepository;
             _jwtUtil = jwtUtil;
+            _imageUtil = imageUtil;
+        }
+
+        [HttpPost("test")]
+        public async Task<IActionResult> Test(IFormFile image)
+        {
+            if (image == null || image.Length == 0)
+            {
+                return BadRequest(new FailResponse<string>(null, "No image file uploaded."));
+            }
+
+            using var ms = new MemoryStream();
+            await image.CopyToAsync(ms);
+            var imageBytes = ms.ToArray();
+            var fileName = _imageUtil.SaveImage(imageBytes, image.FileName);
+
+            return Ok(new SuccessResponse<string>(fileName, "Image uploaded successfully."));
         }
 
         [HttpPost("login")]
