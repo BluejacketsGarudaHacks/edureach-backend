@@ -58,4 +58,15 @@ public class ScheduleRepository
         await _db.SaveChangesAsync();
         return true;
     }
+
+    public async Task<ICollection<Schedule>> GetScheduleByCommunityAsync(Guid communityId)
+    {
+        var schedules = _db.Schedules
+            .Where(s => s.CommunityId.Equals(communityId))
+            .Include(s => s.Community)
+            .Include(s => s.Volunteer)
+            .ToList();
+
+        return schedules;
+    }
 }

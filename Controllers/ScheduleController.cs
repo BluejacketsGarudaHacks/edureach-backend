@@ -94,5 +94,14 @@ namespace Backend.Controllers
 
             return NoContent();
         }
+        
+        [HttpGet("community/{communityId}")]
+        public async Task<ActionResult<ICollection<Schedule>>> GetScheduleByCommunity(Guid communityId)
+        {
+            var schedules = await _scheduleRepository.
+                GetScheduleByCommunityAsync(communityId);
+    
+            return Ok(schedules);
+        }
     }
 }
