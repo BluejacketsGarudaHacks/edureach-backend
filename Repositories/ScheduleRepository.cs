@@ -35,9 +35,9 @@ public class ScheduleRepository
     }
 
     // Update
-    public async Task<bool> UpdateScheduleAsync(Schedule schedule)
+    public async Task<bool> UpdateScheduleAsync(Guid id, Schedule schedule)
     {
-        var existing = await _db.Schedules.FindAsync(schedule.Id);
+        var existing = await _db.Schedules.FindAsync(id);
         if (existing == null) throw new DataException("Schedule tidak ditemukan");
 
         _db.Entry(existing).CurrentValues.SetValues(schedule);

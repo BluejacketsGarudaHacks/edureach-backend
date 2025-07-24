@@ -18,20 +18,15 @@ public class ScheduleController : ControllerBase
 
     // GET: api/Schedule
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<ScheduleResponse>>> GetSchedules()
+    public async Task<ActionResult<IEnumerable<Schedule>>> GetSchedules()
     {
         var schedules = await _scheduleRepository.GetAllSchedulesAsync();
-        return schedules.Select(s => new ScheduleResponse
-        {
-            Id = s.Id,
-            CommunityId = s.CommunityId,
-            ScheduleTime = s.ScheduleTime
-        }).ToList();
+        return Ok(schedules);
     }
 
     // GET: api/Schedule/5
     [HttpGet("{id}")]
-    public async Task<ActionResult<ScheduleResponse>> GetSchedule(Guid id)
+    public async Task<ActionResult<Schedule>> GetSchedule(Guid id)
     {
         var schedule = await _scheduleRepository.GetScheduleByIdAsync(id);
 
@@ -45,7 +40,7 @@ public class ScheduleController : ControllerBase
 
     // POST: api/Schedule
     [HttpPost]
-    public async Task<ActionResult<ScheduleResponse>> CreateSchedule([FromBody] CreateScheduleRequest request)
+    public async Task<ActionResult<Schedule>> CreateSchedule([FromBody] CreateScheduleRequest request)
     {
         var schedule = new Schedule
         {
@@ -55,7 +50,7 @@ public class ScheduleController : ControllerBase
 
         await _scheduleRepository.AddScheduleAsync(schedule);
 
-        return CreatedAtAction("GetSchedule", new { id = schedule.Id }, new ScheduleResponse
+        return CreatedAtAction("GetSchedule", new { id = schedule.Id }, new Schedule
         {
             Id = schedule.Id,
             CommunityId = schedule.CommunityId,
