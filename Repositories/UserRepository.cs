@@ -91,5 +91,13 @@ namespace Backend.Repositories
             
             return notifications;
         }
+
+        public async Task<UserSummary> CreateUserSummary(UserSummary summary)
+        {
+            _db.UserSummaries.Add(summary);
+            var result = await _db.SaveChangesAsync();
+
+            return summary;
+        } 
     }
 }

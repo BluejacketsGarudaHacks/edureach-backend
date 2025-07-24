@@ -4,6 +4,10 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.IO;
 using System.Net.Http.Headers;
+using System.Text.Json;
+using Backend.Dtos;
+using Backend.Models;
+using Backend.Repositories;
 
 namespace Backend.Controllers
 {
@@ -12,10 +16,13 @@ namespace Backend.Controllers
     public class SummarizeController : ControllerBase
     {
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly UserRepository _userRepository;
 
-        public SummarizeController(IHttpClientFactory httpClientFactory)
+        public SummarizeController(IHttpClientFactory httpClientFactory,
+            UserRepository userRepository)
         {
             _httpClientFactory = httpClientFactory;
+            _userRepository = userRepository;
         }
 
         [HttpPost("upload")]
@@ -30,6 +37,8 @@ namespace Backend.Controllers
             }
 
             var client = _httpClientFactory.CreateClient();
+            var userId = Guid.Parse(HttpContext.Items["UserId"]!.ToString()!);
+            
             var requestContent = new MultipartFormDataContent();
 
             // Add file
@@ -51,7 +60,29 @@ namespace Backend.Controllers
             }
 
             var result = await response.Content.ReadAsStringAsync();
+
+            if (result == null)
+                throw new Exception("Error meringkas data!");
+
+            var jsonResponse = JsonSerializer.Deserialize<SummarizeResponse>(result);
+            var saveResult = await this.SaveUserSummary(userId, file, jsonResponse.Result);
+            
             return Ok(result);
+        }
+
+        private async Task<bool> SaveUserSummary(Guid userId, IFormFile file, string summaryResult)
+        {
+            var fileName = file.FileName;
+
+            var userSummary = new UserSummary()
+            {
+                SummaryResult = summaryResult,
+                SummaryTitle = fileName,
+                UserId = userId,
+            };
+
+            await _userRepository.CreateUserSummary(userSummary);
+            return true;
         }
     }
 }
