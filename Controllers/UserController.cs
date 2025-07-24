@@ -148,6 +148,7 @@ namespace Backend.Controllers
 
             var userResponse = new UserResponseDto
             {
+                Id = userId,
                 FullName = user.Fullname,
                 Email = user.Email,
                 IsVolunteer = user.IsVolunteer,
