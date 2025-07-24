@@ -75,6 +75,40 @@ namespace Backend.Controllers
 
             return Ok(new SuccessResponse<string>(null, "Pendaftaran berhasil"));
         }
+        
+        
+        [HttpPut("{id}")]
+        public async Task<ActionResult<User>> 
+            UpdateUser(Guid id, [FromBody] RegisterRequest register)
+        {
+            var errors = RegisterValidator.Validate(register);
+            
+            if (errors.Any())
+            {
+                return BadRequest(new FailResponse<List<string>>(errors, "Data yang dikirim masih salah"));
+            }
+            
+            var checkUser = await _userRepository.GetUserByEmail(register.Email);
+            if(checkUser != null) {
+                return BadRequest(new FailResponse<string>(null, "Email sudah terdaftar"));
+            }
+            
+            var fullName = string.Concat(register.FirstName, " ", register.LastName);
+            
+            var user = new User 
+            {
+                Id = Guid.NewGuid(),
+                Fullname = fullName,
+                Email = register.Email,
+                Password = register.Password,
+                IsVolunteer = register.IsVolunteer,
+                Dob = register.Dob
+            };
+            
+            var result = await _userRepository.UpdateUser(id, user);
+
+            return result;
+        }
 
         [HttpPost("add-notification")]
         public async Task<ActionResult<Notification>> AddNotification
@@ -114,5 +148,6 @@ namespace Backend.Controllers
             
             return Ok(notifications);
         }
+
     }
 } 
