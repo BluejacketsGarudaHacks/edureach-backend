@@ -77,10 +77,11 @@ namespace Backend.Controllers
         }
         
         
-        [HttpPut("{id}")]
+        [HttpPut("")]
         public async Task<ActionResult<User>> 
             UpdateUser(Guid id, [FromBody] RegisterRequest register)
         {
+            var userId = Guid.Parse(HttpContext.Items["UserId"]!.ToString()!);
             var errors = RegisterValidator.Validate(register);
             
             if (errors.Any())
@@ -105,18 +106,18 @@ namespace Backend.Controllers
                 Dob = register.Dob
             };
             
-            var result = await _userRepository.UpdateUser(id, user);
+            var result = await _userRepository.UpdateUser(userId, user);
 
             return result;
         }
 
         [HttpPost("add-notification")]
-        public async Task<ActionResult<Notification>> AddNotification
-            ([FromBody] NotificationRequest notificationRequest)
+        public async Task<ActionResult<Notification>> AddNotification([FromBody] NotificationRequest notificationRequest)
         {
+            var userId = Guid.Parse(HttpContext.Items["UserId"]!.ToString()!);
             var notification = new Notification()
             {
-                UserId = notificationRequest.UserId,
+                UserId = userId,
                 Message = notificationRequest.Message,
                 IsShown = false,
             };
@@ -126,24 +127,24 @@ namespace Backend.Controllers
         }
 
         [HttpPut("update-notification/{id}")]
-        public async Task<ActionResult<Notification>> 
-            UpdateNotification(Guid id, [FromBody] NotificationRequest notificationRequest)
+        public async Task<ActionResult<Notification>>UpdateNotification(Guid id, [FromBody] NotificationRequest notificationRequest)
         {
+            var userId = Guid.Parse(HttpContext.Items["UserId"]!.ToString()!);
             var notification = new Notification()
             {
-                UserId = notificationRequest.UserId,
+                UserId = userId,
                 Message = notificationRequest.Message,
-                IsShown = false,
+                IsShown = notificationRequest.IsShown,
             };
 
-            _userRepository.UpdateNotificationAsync(id, notification);
+            notification = await _userRepository.UpdateNotificationAsync(id, notification);
             return Ok(notification);
         }
 
-        [HttpGet("notification/user/{userId}")]
-        public async Task<ActionResult<ICollection<Notification>>> 
-            GetUserNotification(Guid userId)
+        [HttpGet("notification/user")]
+        public async Task<ActionResult<ICollection<Notification>>>GetUserNotification()
         {
+            var userId = Guid.Parse(HttpContext.Items["UserId"]!.ToString()!);
             var notifications = await _userRepository.GetUserNotificationsAsync(userId);
             
             return Ok(notifications);
