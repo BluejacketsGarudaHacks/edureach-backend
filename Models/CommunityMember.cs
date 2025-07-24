@@ -13,5 +13,5 @@ public class CommunityMember: ModelWithDate
 
     
     public User User { get; set; }
-    public Community Commuity { get; set; }
+    public Community Community { get; set; }
 }

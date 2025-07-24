@@ -62,7 +62,7 @@ namespace Backend.Infrastructure.Database
             
             modelBuilder.Entity<Community>()
                             .HasMany<CommunityMember>(u => u.Members)
-                            .WithOne(s => s.Commuity)
+                            .WithOne(s => s.Community)
                             .HasForeignKey(s => s.CommunityId)
                             .IsRequired();
             
