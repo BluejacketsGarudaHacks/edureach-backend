@@ -25,5 +25,6 @@ namespace Backend.Models
         
         public ICollection<Schedule> Schedules { get; set; }
         public ICollection<CommunityMember> Members{ get; set; }
+        public ICollection<Notification> Notifications{ get; set; }
     }
 }   
