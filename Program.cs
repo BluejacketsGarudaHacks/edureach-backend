@@ -113,7 +113,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseCorsMiddleware();
-// app.UseAuthenticationMiddleware();
+app.UseAuthenticationMiddleware();
 app.MapControllers();
 
 app.Run();

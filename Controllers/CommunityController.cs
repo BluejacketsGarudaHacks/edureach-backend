@@ -44,6 +44,7 @@ public class CommunityController : ControllerBase
     public async Task<ActionResult<Community>> Create([FromForm] CommunityRequest communityRequest)
     {
         var userId = Guid.Parse(HttpContext.Items["UserId"]!.ToString()!);
+        Console.WriteLine("kontol");    
         var community = await this.CreateCommunityObject(communityRequest);
         var created = await _repository.AddCommunityAsync(community);
         var communityMember = await _repository.AddCommunityMemberAsync(
@@ -54,7 +55,7 @@ public class CommunityController : ControllerBase
 
     // PUT: api/community/{id}
     [HttpPut("{id}")]
-    public async Task<ActionResult<Community>> Update(Guid id, [FromBody] CommunityRequest communityRequest)
+    public async Task<ActionResult<Community>> Update(Guid id, [FromForm] CommunityRequest communityRequest)
     {
         var updatedCommunity = await this.CreateCommunityObject(communityRequest);
         var result = await _repository.UpdateCommunityAsync(id, updatedCommunity);
