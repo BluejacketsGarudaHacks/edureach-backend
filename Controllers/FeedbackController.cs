@@ -24,7 +24,7 @@ namespace Backend.Controllers
             return feedbacks.Select(f => new FeedbackResponse
             {
                 Id = f.Id,
-                VolunteedId = f.VolunteedId,
+                VolunteerId = f.VolunteerId,
                 Message = f.Message
             }).ToList();
         }
@@ -43,7 +43,7 @@ namespace Backend.Controllers
             return new FeedbackResponse
             {
                 Id = feedback.Id,
-                VolunteedId = feedback.VolunteedId,
+                VolunteerId = feedback.VolunteerId,
                 Message = feedback.Message
             };
         }
@@ -52,9 +52,11 @@ namespace Backend.Controllers
         [HttpPost]
         public async Task<ActionResult<FeedbackResponse>> CreateFeedback([FromBody] CreateFeedbackRequest request)
         {
+            var userId = Guid.Parse(HttpContext.Items["UserId"]!.ToString()!);
             var feedback = new Feedback
             {
-                VolunteerId = Guid.Parse(request.VolunteedId),
+                UserId = userId,
+                VolunteerId = Guid.Parse(request.VolunteerId),
                 Message = request.Message
             };
 
@@ -63,7 +65,7 @@ namespace Backend.Controllers
             return CreatedAtAction("GetFeedback", new { id = feedback.Id }, new FeedbackResponse
             {
                 Id = feedback.Id,
-                VolunteedId = feedback.VolunteedId,
+                VolunteerId = feedback.VolunteerId,
                 Message = feedback.Message
             });
         }
@@ -74,7 +76,7 @@ namespace Backend.Controllers
         {
             var feedback = new Feedback
             {
-                VolunteedId = Guid.Parse(request.VolunteedId),
+                VolunteerId = Guid.Parse(request.VolunteerId),
                 Message = request.Message
             };
 
