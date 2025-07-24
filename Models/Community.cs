@@ -14,7 +14,7 @@ namespace Backend.Models
         public string Description { get; set; } = string.Empty;
 
         [Required]
-        public string LocationId { get; set; } = string.Empty;
+        public Guid LocationId { get; set; }
 
         [Required]
         public string ImagePath { get; set; } = string.Empty;
