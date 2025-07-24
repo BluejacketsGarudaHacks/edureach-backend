@@ -88,6 +88,7 @@ public class CommunityController : ControllerBase
              LocationId = communityRequest.LocationId,
              Description = communityRequest.Description,
              Name = communityRequest.Name,
+             ImagePath = communityRequest.ImagePath,
          };
 
          return community;

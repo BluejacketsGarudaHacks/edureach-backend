@@ -4,9 +4,9 @@ namespace Backend.Models;
 
 public class ModelWithDate
 {
-    [Required]
+    [Required] 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
+    
     [Required]
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 }

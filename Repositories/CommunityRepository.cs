@@ -77,12 +77,12 @@ public class CommunityRepository
             .FirstOrDefaultAsync();
 
         if (community == null)
-            throw new DataException("Community not found");
+            throw new DataException("Community tidak ditemukan");
         
         var user = await _db.Users.FindAsync(memberId);
         
         if(user == null)
-            throw new DataException("User not found");
+            throw new DataException("User tidak ditemukan");
 
         var communityMember = await _db.CommunityMembers.FirstOrDefaultAsync(cm => cm.UserId == memberId && cm.CommunityId == communityId);
         if(communityMember != null)
