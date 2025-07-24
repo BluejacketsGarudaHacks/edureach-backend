@@ -32,10 +32,27 @@ namespace Backend.Infrastructure.Database
 
             modelBuilder.Entity<Community>()
                 .HasKey(c => c.Id);
+            
+            modelBuilder.Entity<Community>()
+                            .HasMany<CommunityMember>(u => u.Members)
+                            .WithOne(s => s.Commuity)
+                            .HasForeignKey(s => s.CommunityId)
+                            .IsRequired();
+            
+            modelBuilder.Entity<Community>()
+                .HasMany<Schedule>(u => u.Schedules)
+                .WithOne(s => s.Community)
+                .HasForeignKey(s => s.CommunityId)
+                .IsRequired();
 
-            modelBuilder.Entity<Location>().HasData(
-                
-            )
+            modelBuilder.Entity<Location>()
+                .HasKey(l => l.Id);
+            
+            modelBuilder.Entity<Location>()
+                .HasMany<Community>(u => u.Communities)
+                .WithOne(s => s.Location)
+                .HasForeignKey(s => s.LocationId)
+                .IsRequired();
         }
     }
 } 
