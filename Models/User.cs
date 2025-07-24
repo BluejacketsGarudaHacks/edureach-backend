@@ -22,5 +22,8 @@ namespace Backend.Models
 
         [Required]
         public DateOnly Dob { get; set; }
+        
+        public ICollection<Schedule> Schedules { get; set; }
+        public ICollection<CommunityMember> Members{ get; set; }
     }
 }   

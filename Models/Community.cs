@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Backend.Models
 {
-    public class Community
+    public class Community: ModelWithDate
     {
         [Key]
         public Guid Id { get; set; }
@@ -18,5 +18,9 @@ namespace Backend.Models
 
         [Required]
         public string ImagePath { get; set; } = string.Empty;
+        
+        public Location Location { get; set; }
+        public ICollection<CommunityMember> Members { get; set; }
+        public ICollection<Schedule> Schedules { get; set; }
     }
 }   
