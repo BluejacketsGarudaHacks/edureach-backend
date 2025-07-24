@@ -39,6 +39,14 @@ public class FeedbackRepository
             .FirstOrDefaultAsync(f => f.Id == id);
     }
 
+    public async Task<List<Feedback>> GetAllVolunteerFeedbackAsync(Guid volunteerId)
+    {
+        return await _db.Feedbacks
+            .Where(f => f.VolunteerId == volunteerId)
+            .Include(f => f.Volunteer)
+            .ToListAsync();
+    }
+
     // Update
     public async Task<bool> UpdateFeedbackAsync(Guid id, Feedback feedback)
     {

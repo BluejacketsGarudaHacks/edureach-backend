@@ -18,20 +18,24 @@ namespace Backend.Controllers
 
         // GET: api/Feedback
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<FeedbackResponse>>> GetFeedbacks()
+        public async Task<ActionResult<IEnumerable<Feedback>>> GetFeedbacks()
         {
             var feedbacks = await _feedbackRepository.GetAllFeedbacksAsync();
-            return feedbacks.Select(f => new FeedbackResponse
-            {
-                Id = f.Id,
-                VolunteerId = f.VolunteerId,
-                Message = f.Message
-            }).ToList();
+            return feedbacks;
+        }
+
+        // GET: api/Feedback/volunteer
+        [HttpGet("volunteer")]
+        public async Task<ActionResult<ICollection<Feedback>>> GetVolunteerFeedbacks()
+        {
+            var userId = Guid.Parse(HttpContext.Items["UserId"]!.ToString()!);
+            var feedbacks = await _feedbackRepository.GetAllVolunteerFeedbackAsync(userId);
+            return feedbacks;
         }
 
         // GET: api/Feedback/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<FeedbackResponse>> GetFeedback(Guid id)
+        public async Task<ActionResult<Feedback>> GetFeedback(Guid id)
         {
             var feedback = await _feedbackRepository.GetFeedbackByIdAsync(id);
 
@@ -40,7 +44,7 @@ namespace Backend.Controllers
                 return NotFound();
             }
 
-            return new FeedbackResponse
+            return new Feedback
             {
                 Id = feedback.Id,
                 VolunteerId = feedback.VolunteerId,
@@ -50,7 +54,7 @@ namespace Backend.Controllers
 
         // POST: api/Feedback
         [HttpPost]
-        public async Task<ActionResult<FeedbackResponse>> CreateFeedback([FromBody] CreateFeedbackRequest request)
+        public async Task<ActionResult<Feedback>> CreateFeedback([FromBody] CreateFeedbackRequest request)
         {
             var userId = Guid.Parse(HttpContext.Items["UserId"]!.ToString()!);
             var feedback = new Feedback
@@ -62,7 +66,7 @@ namespace Backend.Controllers
 
             await _feedbackRepository.AddFeedbackAsync(feedback);
 
-            return CreatedAtAction("GetFeedback", new { id = feedback.Id }, new FeedbackResponse
+            return CreatedAtAction("GetFeedback", new { id = feedback.Id }, new Feedback
             {
                 Id = feedback.Id,
                 VolunteerId = feedback.VolunteerId,

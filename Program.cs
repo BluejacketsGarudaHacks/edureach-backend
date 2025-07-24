@@ -73,6 +73,7 @@ builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<CommunityRepository>();
 builder.Services.AddScoped<LocationRepository>();
 builder.Services.AddScoped<ScheduleRepository>();
+builder.Services.AddScoped<FeedbackRepository>();
 
 builder.Services.AddHttpClient();
 
