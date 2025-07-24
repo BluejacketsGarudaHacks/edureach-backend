@@ -12,6 +12,7 @@ namespace Backend.Infrastructure.Database
         public DbSet<Schedule> Schedules { get; set; }
         public DbSet<Notification> Notifications{ get; set; }
         public DbSet<Feedback> Feedbacks{ get; set; }
+        public DbSet<UserSummary> UserSummaries{ get; set; }
  
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
@@ -48,6 +49,12 @@ namespace Backend.Infrastructure.Database
                 .HasMany<CommunityMember>(u => u.Members)
                 .WithOne(s => s.User)
                 .HasForeignKey(s => s.UserId)
+                .IsRequired();
+
+            modelBuilder.Entity<User>()
+                .HasMany<UserSummary>(u => u.UserSummaries)
+                .WithOne(us => us.User)
+                .HasForeignKey(us => us.UserId)
                 .IsRequired();
 
             modelBuilder.Entity<Community>()

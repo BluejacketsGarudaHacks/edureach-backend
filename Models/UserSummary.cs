@@ -9,13 +9,16 @@ public class UserSummary
 
     [Required]
     public Guid UserId { get; set; }
+
+    [Required]
+    public string SummaryTitle { get; set; }
     
     [Required]
-    public Guid PdfPath { get; set; }
+    public string SummaryResult { get; set; }
     
     [Required]
     public DateTime CreatedAt { get; set; }
 
-    public User user;
+    public User User;
 }
     
