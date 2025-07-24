@@ -75,5 +75,35 @@ namespace Backend.Controllers
 
             return Ok(new SuccessResponse<string>(null, "Registration successful"));
         }
+
+        [HttpPost("add-notification")]
+        public async Task<ActionResult<Notification>> AddNotification
+            ([FromBody] NotificationRequest notificationRequest)
+        {
+            var notification = new Notification()
+            {
+                UserId = notificationRequest.UserId,
+                Message = notificationRequest.Message,
+                IsShown = false,
+            };
+            await _userRepository.AddNotificationAsync(notification);
+
+            return Ok(notification);
+        }
+
+        [HttpPut("update-notification/{id}")]
+        public async Task<ActionResult<Notification>> 
+            UpdateNotification(Guid id, [FromBody] NotificationRequest notificationRequest)
+        {
+            var notification = new Notification()
+            {
+                UserId = notificationRequest.UserId,
+                Message = notificationRequest.Message,
+                IsShown = false,
+            };
+
+            _userRepository.UpdateNotificationAsync(id, notification);
+            return Ok(notification);
+        }
     }
 } 

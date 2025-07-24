@@ -1,3 +1,4 @@
+using System.Data;
 using Backend.Infrastructure.Database;
 using Backend.Models;
 using Microsoft.EntityFrameworkCore;
@@ -29,6 +30,30 @@ namespace Backend.Repositories
         {
             _db.Users.Add(user);
             await _db.SaveChangesAsync();
+        }
+
+        public async Task<Notification> AddNotificationAsync(Notification notification)
+        {
+            _db.Notifications.Add(notification);
+            await _db.SaveChangesAsync();
+
+            return notification;
+        }
+
+        public async Task<Notification> UpdateNotificationAsync(Guid id, Notification notification)
+        {
+            var findNotification = await _db.Notifications.FindAsync(id);
+
+            if (findNotification == null)
+                throw new DataException("Notification not found");
+            
+            findNotification.IsShown = notification.IsShown;
+            findNotification.Message = notification.Message;
+            
+            _db.Notifications.Update(findNotification);
+            await _db.SaveChangesAsync();
+            
+            return notification;
         }
     }
 }
