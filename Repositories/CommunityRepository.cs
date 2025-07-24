@@ -37,7 +37,9 @@ public class CommunityRepository
     {
         return await _db.Communities
             .Include(c => c.Members)
+            .ThenInclude(m => m.User)
             .Include(c => c.Schedules)
+            .Include(c => c.Location)
             .ToListAsync();
     }
 
