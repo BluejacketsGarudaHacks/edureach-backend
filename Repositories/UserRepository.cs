@@ -72,6 +72,7 @@ namespace Backend.Repositories
                 throw new DataException("Notification not found");
             
             findNotification.IsShown = notification.IsShown;
+            findNotification.IsChecked = notification.IsChecked;
             findNotification.Message = notification.Message;
             
             _db.Notifications.Update(findNotification);
@@ -111,7 +112,8 @@ namespace Backend.Repositories
                     UserId = member.UserId,
                     Message = message,
                     IsShown = false,
-                    CreatedAt = DateTime.UtcNow
+                    CreatedAt = DateTime.UtcNow,
+                    IsChecked = false,
                 };
 
                 _db.Notifications.Add(notification);

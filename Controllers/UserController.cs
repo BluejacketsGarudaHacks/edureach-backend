@@ -169,6 +169,7 @@ namespace Backend.Controllers
                 UserId = userId,
                 Message = notificationRequest.Message,
                 IsShown = false,
+                IsChecked = false,
             };
             await _userRepository.AddNotificationAsync(notification);
 
@@ -184,6 +185,7 @@ namespace Backend.Controllers
                 UserId = userId,
                 Message = notificationRequest.Message,
                 IsShown = notificationRequest.IsShown,
+                IsChecked = notificationRequest.IsChecked,
             };
 
             notification = await _userRepository.UpdateNotificationAsync(id, notification);
