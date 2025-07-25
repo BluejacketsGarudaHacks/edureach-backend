@@ -34,7 +34,10 @@
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       ConnectionStrings__DBConnection: Host=postgres;Port=5432;Database=edureach;Username=admin;Password=admin123
+    volumes:
+      - images:/app/wwwroot/Images
 
 volumes:
   pgadmin_data:
   postgres_data:
+  images:

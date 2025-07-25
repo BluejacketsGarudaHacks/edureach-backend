@@ -58,7 +58,7 @@ namespace Backend.Controllers
             requestContent.Add(new StringContent(targetLang), "target_lang");
 
             // Call your Python FastAPI endpoint
-            var response = await client.PostAsync("http://localhost:8000/upload-pdf", requestContent);
+            var response = await client.PostAsync("https://ai.danieladamlu.my.id/upload-pdf", requestContent);
 
             if (!response.IsSuccessStatusCode)
             {
