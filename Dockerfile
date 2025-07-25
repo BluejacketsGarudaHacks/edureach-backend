@@ -1,6 +1,8 @@
 ﻿FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
-USER $APP_UID
+# USER $APP_UID
 WORKDIR /app
+RUN mkdir -p /app/wwwroot/Images \
+    && chmod -R 777 /app/wwwroot
 EXPOSE 8080
 EXPOSE 8081
 
