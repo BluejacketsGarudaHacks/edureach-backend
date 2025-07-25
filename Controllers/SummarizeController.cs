@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Http;
+ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -23,6 +23,13 @@ namespace Backend.Controllers
         {
             _httpClientFactory = httpClientFactory;
             _userRepository = userRepository;
+        }
+        
+        [HttpGet("user/{userId}")]
+        public async Task<ActionResult<UserSummary>> GetUserSummary(Guid userId)
+        {
+            var summaries = await _userRepository.GetUserSummariesAsync(userId);
+            return Ok(summaries);
         }
 
         [HttpPost("upload")]

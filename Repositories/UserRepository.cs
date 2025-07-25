@@ -39,7 +39,7 @@ namespace Backend.Repositories
                 throw new DataException("Akun tidak ditemukan");
 
             existing.Email = user.Email;
-            existing.Fullname = user.Fullname;
+            existing.FullName = user.FullName;
             existing.Dob = user.Dob;
             existing.Password = user.Password;
             existing.IsVolunteer = user.IsVolunteer;
@@ -72,7 +72,9 @@ namespace Backend.Repositories
                 throw new DataException("Notification not found");
             
             findNotification.IsShown = notification.IsShown;
+            findNotification.IsChecked = notification.IsChecked;
             findNotification.Message = notification.Message;
+            findNotification.IsChecked = notification.IsChecked;
             
             _db.Notifications.Update(findNotification);
             await _db.SaveChangesAsync();
@@ -82,10 +84,10 @@ namespace Backend.Repositories
 
         public async Task<ICollection<Notification>> GetUserNotificationsAsync(Guid userId)
         {
-            var notifications = _db.Notifications
-                .Where(u => u.UserId.Equals(userId))
+            var notifications = await _db.Notifications
+                .Where(u => u.UserId == userId)
                 .OrderByDescending(u => u.CreatedAt)
-                .ToList();
+                .ToListAsync();
             
             return notifications;
         }
@@ -96,6 +98,36 @@ namespace Backend.Repositories
             var result = await _db.SaveChangesAsync();
 
             return summary;
-        } 
+        }
+
+        public async Task<ICollection<UserSummary>> GetUserSummariesAsync(Guid userId)
+        {
+            var summaries = await _db.UserSummaries.Where(us => us.UserId.Equals(userId))
+                .ToListAsync();
+
+            return summaries;
+        }
+        public async Task AddUserNotificationByCommunityId(Guid communityId, string message)
+        {
+            var communityMembers = await _db.CommunityMembers
+                .Where(cm => cm.CommunityId == communityId)
+                .ToListAsync();
+
+            foreach (var member in communityMembers)
+            {
+                var notification = new Notification
+                {
+                    UserId = member.UserId,
+                    Message = message,
+                    IsShown = false,
+                    CreatedAt = DateTime.UtcNow,
+                    IsChecked = false,
+                };
+
+                _db.Notifications.Add(notification);
+            }
+
+            await _db.SaveChangesAsync();
+        }
     }
 }
