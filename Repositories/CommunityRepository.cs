@@ -126,7 +126,7 @@ public class CommunityRepository
             .Include(c => c.Schedules)
             .Include(c => c.Location)
             .Where(c => c.Members
-            .Any(m => m.UserId == userId && m.IsJoined))
+            .Any(m => m.UserId == userId))
             .ToListAsync();
 
         return communities;
