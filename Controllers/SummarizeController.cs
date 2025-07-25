@@ -24,6 +24,13 @@ namespace Backend.Controllers
             _httpClientFactory = httpClientFactory;
             _userRepository = userRepository;
         }
+        
+        [HttpGet("user/{userId}")]
+        public async Task<ActionResult<UserSummary>> GetUserSummary(Guid userId)
+        {
+            var summaries = await _userRepository.GetUserSummariesAsync(userId);
+            return Ok(summaries);
+        }
 
         [HttpPost("upload")]
         public async Task<IActionResult> UploadPdfToPython(

@@ -99,6 +99,13 @@ namespace Backend.Repositories
             return summary;
         }
 
+        public async Task<ICollection<UserSummary>> GetUserSummariesAsync(Guid userId)
+        {
+            var summaries = await _db.UserSummaries.Where(us => us.UserId.Equals(userId))
+                .ToListAsync();
+
+            return summaries;
+        }
         public async Task AddUserNotificationByCommunityId(Guid communityId, string message)
         {
             var communityMembers = await _db.CommunityMembers
