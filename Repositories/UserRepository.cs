@@ -72,6 +72,7 @@ namespace Backend.Repositories
                 throw new DataException("Notification not found");
             
             findNotification.IsShown = notification.IsShown;
+            findNotification.IsChecked = notification.IsChecked;
             findNotification.Message = notification.Message;
             findNotification.IsChecked = notification.IsChecked;
             
@@ -99,6 +100,13 @@ namespace Backend.Repositories
             return summary;
         }
 
+        public async Task<ICollection<UserSummary>> GetUserSummariesAsync(Guid userId)
+        {
+            var summaries = await _db.UserSummaries.Where(us => us.UserId.Equals(userId))
+                .ToListAsync();
+
+            return summaries;
+        }
         public async Task AddUserNotificationByCommunityId(Guid communityId, string message)
         {
             var communityMembers = await _db.CommunityMembers
@@ -112,7 +120,8 @@ namespace Backend.Repositories
                     UserId = member.UserId,
                     Message = message,
                     IsShown = false,
-                    CreatedAt = DateTime.UtcNow
+                    CreatedAt = DateTime.UtcNow,
+                    IsChecked = false,
                 };
 
                 _db.Notifications.Add(notification);
