@@ -1,4 +1,13 @@
 ﻿services:
+  webapi:
+    build: .
+    container_name: webapi
+    environment:
+      - ASPNETCORE_ENVIRONMENT=
+    ports:
+      - "6969:6969"
+    depends_on:
+      - postgres
   postgres:
     image: postgres:15
     container_name: postgres_db
