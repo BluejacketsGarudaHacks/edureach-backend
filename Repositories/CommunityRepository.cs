@@ -116,4 +116,19 @@ public class CommunityRepository
         await _db.SaveChangesAsync();
         return communityMember;
     }
+
+    public async Task<ICollection<Community>>
+        GetUserJoinedCommunitiesAsync(Guid userId)
+    {
+        var communities = await _db.Communities
+            .Include(c => c.Members)
+            .ThenInclude(m => m.User)
+            .Include(c => c.Schedules)
+            .Include(c => c.Location)
+            .Where(c => c.Members
+            .Any(m => m.UserId == userId && m.IsJoined))
+            .ToListAsync();
+
+        return communities;
+    }
 }
