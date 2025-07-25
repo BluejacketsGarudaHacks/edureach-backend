@@ -77,6 +77,14 @@ public class CommunityController : ControllerBase
         return NoContent();
     }
 
+    [HttpGet("user/{userId}")]
+    public async Task<ActionResult<ICollection<Community>>>
+        GetUserJoinedCommunities(Guid userId)
+    {
+        var result = await _repository.GetUserJoinedCommunitiesAsync(userId);
+        return Ok(result);
+    }
+    
     [HttpPost("add-member")]
     public async Task<ActionResult<CommunityMember>> AddMember([FromBody] CommunityMemberRequest memberRequest)
     {
