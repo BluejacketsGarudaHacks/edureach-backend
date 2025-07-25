@@ -73,6 +73,7 @@ namespace Backend.Repositories
             
             findNotification.IsShown = notification.IsShown;
             findNotification.Message = notification.Message;
+            findNotification.IsChecked = notification.IsChecked;
             
             _db.Notifications.Update(findNotification);
             await _db.SaveChangesAsync();
@@ -82,10 +83,10 @@ namespace Backend.Repositories
 
         public async Task<ICollection<Notification>> GetUserNotificationsAsync(Guid userId)
         {
-            var notifications = _db.Notifications
-                .Where(u => u.UserId.Equals(userId))
+            var notifications = await _db.Notifications
+                .Where(u => u.UserId == userId)
                 .OrderByDescending(u => u.CreatedAt)
-                .ToList();
+                .ToListAsync();
             
             return notifications;
         }

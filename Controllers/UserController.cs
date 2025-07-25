@@ -184,6 +184,7 @@ namespace Backend.Controllers
                 UserId = userId,
                 Message = notificationRequest.Message,
                 IsShown = notificationRequest.IsShown,
+                IsChecked = notificationRequest.IsChecked
             };
 
             notification = await _userRepository.UpdateNotificationAsync(id, notification);
@@ -195,7 +196,7 @@ namespace Backend.Controllers
         {
             var userId = Guid.Parse(HttpContext.Items["UserId"]!.ToString()!);
             var notifications = await _userRepository.GetUserNotificationsAsync(userId);
-            
+
             return Ok(notifications);
         }
 
