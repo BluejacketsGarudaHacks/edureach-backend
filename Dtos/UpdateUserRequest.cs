@@ -4,10 +4,10 @@ namespace Backend.Dtos
 {
     public record UpdateUserRequest(
         string FirstName,
-        string LastName,
+        string? LastName,
         string Email,
         DateOnly Dob, 
         bool IsVolunteer,
-        IFormFile Image
+        IFormFile? Image
     );
 } 
