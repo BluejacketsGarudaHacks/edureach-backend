@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250724115232_AddNotificationTable")]
-    partial class AddNotificationTable
+    [Migration("20250724235501_UpdateUserColumn")]
+    partial class UpdateUserColumn
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -71,6 +71,9 @@ namespace Backend.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<bool>("IsJoined")
+                        .HasColumnType("boolean");
+
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -84,6 +87,37 @@ namespace Backend.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("CommunityMembers");
+                });
+
+            modelBuilder.Entity("Backend.Models.Feedback", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("VolunteerId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("VolunteerId");
+
+                    b.ToTable("Feedbacks");
                 });
 
             modelBuilder.Entity("Backend.Models.Location", b =>
@@ -137,7 +171,7 @@ namespace Backend.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Notification");
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("Backend.Models.Schedule", b =>
@@ -187,6 +221,10 @@ namespace Backend.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("ImagePath")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<bool>("IsVolunteer")
                         .HasColumnType("boolean");
 
@@ -197,6 +235,33 @@ namespace Backend.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Backend.Models.UserSummary", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("SummaryResult")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("SummaryTitle")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserSummaries");
                 });
 
             modelBuilder.Entity("Backend.Models.Community", b =>
@@ -212,7 +277,7 @@ namespace Backend.Migrations
 
             modelBuilder.Entity("Backend.Models.CommunityMember", b =>
                 {
-                    b.HasOne("Backend.Models.Community", "Commuity")
+                    b.HasOne("Backend.Models.Community", "Community")
                         .WithMany("Members")
                         .HasForeignKey("CommunityId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -224,9 +289,28 @@ namespace Backend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Commuity");
+                    b.Navigation("Community");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Backend.Models.Feedback", b =>
+                {
+                    b.HasOne("Backend.Models.User", "User")
+                        .WithMany("GivenFeedbacks")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Backend.Models.User", "Volunteer")
+                        .WithMany("ReceivedFeedbacks")
+                        .HasForeignKey("VolunteerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+
+                    b.Navigation("Volunteer");
                 });
 
             modelBuilder.Entity("Backend.Models.Notification", b =>
@@ -259,6 +343,17 @@ namespace Backend.Migrations
                     b.Navigation("Volunteer");
                 });
 
+            modelBuilder.Entity("Backend.Models.UserSummary", b =>
+                {
+                    b.HasOne("Backend.Models.User", "User")
+                        .WithMany("UserSummaries")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Backend.Models.Community", b =>
                 {
                     b.Navigation("Members");
@@ -273,11 +368,17 @@ namespace Backend.Migrations
 
             modelBuilder.Entity("Backend.Models.User", b =>
                 {
+                    b.Navigation("GivenFeedbacks");
+
                     b.Navigation("Members");
 
                     b.Navigation("Notifications");
 
+                    b.Navigation("ReceivedFeedbacks");
+
                     b.Navigation("Schedules");
+
+                    b.Navigation("UserSummaries");
                 });
 #pragma warning restore 612, 618
         }

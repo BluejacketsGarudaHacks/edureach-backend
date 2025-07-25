@@ -214,7 +214,7 @@ namespace Backend.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Fullname")
+                    b.Property<string>("FullName")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -274,7 +274,7 @@ namespace Backend.Migrations
 
             modelBuilder.Entity("Backend.Models.CommunityMember", b =>
                 {
-                    b.HasOne("Backend.Models.Community", "Commuity")
+                    b.HasOne("Backend.Models.Community", "Community")
                         .WithMany("Members")
                         .HasForeignKey("CommunityId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -286,7 +286,7 @@ namespace Backend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Commuity");
+                    b.Navigation("Community");
 
                     b.Navigation("User");
                 });

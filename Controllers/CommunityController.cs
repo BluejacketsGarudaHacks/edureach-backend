@@ -13,11 +13,13 @@ public class CommunityController : ControllerBase
 {
     private readonly ImageUtil _imageUtil;
     private readonly CommunityRepository _repository;
+    private readonly UserRepository _userRepository;
 
-    public CommunityController(CommunityRepository repository, ImageUtil imageUtil)
+    public CommunityController(CommunityRepository repository, UserRepository userRepository, ImageUtil imageUtil)
     {
         _repository = repository;
         _imageUtil = imageUtil;
+        _userRepository = userRepository;
     }
 
     // GET: api/community
@@ -80,6 +82,11 @@ public class CommunityController : ControllerBase
     {
         var communityMember = await _repository.AddCommunityMemberAsync(
             memberRequest.CommunityId, memberRequest.MemberId, false);
+
+        var user = await _userRepository.GetUserById(memberRequest.MemberId);
+
+        var message = $"{user.FullName} Telah bergabung ke dalam komunitas";
+        await _userRepository.AddUserNotificationByCommunityId(memberRequest.CommunityId, message);
         
         return Ok(communityMember);
     }

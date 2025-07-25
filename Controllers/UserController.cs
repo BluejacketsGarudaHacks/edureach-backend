@@ -57,7 +57,7 @@ namespace Backend.Controllers
             user = new User 
             {
                 Id = Guid.NewGuid(),
-                Fullname = fullName,
+                FullName = fullName,
                 Email = register.Email,
                 Password = register.Password,
                 IsVolunteer = register.IsVolunteer,
@@ -91,9 +91,9 @@ namespace Backend.Controllers
                 return NotFound(new FailResponse<string>(null, "User not found"));
             }
 
-            var fullName = string.Concat(update.FirstName, " ", update.LastName);
+            var FullName = string.Concat(update.FirstName, " ", update.LastName);
 
-            user.Fullname = fullName;
+            user.FullName = FullName;
             user.Email = update.Email;
             user.IsVolunteer = update.IsVolunteer;
             user.Dob = update.Dob;
@@ -149,7 +149,7 @@ namespace Backend.Controllers
             var userResponse = new UserResponseDto
             {
                 Id = userId,
-                FullName = user.Fullname,
+                FullName = user.FullName,
                 Email = user.Email,
                 IsVolunteer = user.IsVolunteer,
                 Dob = user.Dob,

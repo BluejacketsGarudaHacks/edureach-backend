@@ -39,7 +39,7 @@ namespace Backend.Repositories
                 throw new DataException("Akun tidak ditemukan");
 
             existing.Email = user.Email;
-            existing.Fullname = user.Fullname;
+            existing.FullName = user.FullName;
             existing.Dob = user.Dob;
             existing.Password = user.Password;
             existing.IsVolunteer = user.IsVolunteer;
@@ -96,6 +96,28 @@ namespace Backend.Repositories
             var result = await _db.SaveChangesAsync();
 
             return summary;
-        } 
+        }
+
+        public async Task AddUserNotificationByCommunityId(Guid communityId, string message)
+        {
+            var communityMembers = await _db.CommunityMembers
+                .Where(cm => cm.CommunityId == communityId)
+                .ToListAsync();
+
+            foreach (var member in communityMembers)
+            {
+                var notification = new Notification
+                {
+                    UserId = member.UserId,
+                    Message = message,
+                    IsShown = false,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                _db.Notifications.Add(notification);
+            }
+
+            await _db.SaveChangesAsync();
+        }
     }
 }

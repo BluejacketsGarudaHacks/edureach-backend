@@ -154,7 +154,7 @@ namespace Backend.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Fullname")
+                    b.Property<string>("FullName")
                         .IsRequired()
                         .HasColumnType("text");
 
